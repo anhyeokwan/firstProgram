@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="fragment/default">
+
+<th:block layout:fragment="content">
+  <div class="page-section">
+    <div class="container">
+      <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0" style="padding-top: 100px;">Q&A 작성하기</h2>
+      <!-- Icon Divider-->
+      <div class="divider-custom">
+        <div class="divider-custom-line"></div>
+        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+        <div class="divider-custom-line"></div>
+      </div>
+
+      <!-- Contact Section Form-->
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+          <form id="contactForm">
+            <!-- qna제목 input-->
+            <div class="form-floating mb-3">
+              <input class="form-control" id="qnaTitle" name="qnaTitle" type="text" placeholder="제목" data-sb-validations="required" />
+              <label for="qnaTitle">제목</label>
+              <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
+            </div>
+            <!-- qna Writer input-->
+            <div class="form-floating mb-3">
+              <input class="form-control" id="qnaWriter" name="qnaWriter" type="text" placeholder="작성자" data-sb-validations="required,email" />
+              <label for="qnaWriter">작성자</label>
+              <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
+              <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div>
+            </div>
+
+            <!-- secret status input-->
+            <div class="mb-3">
+              <label for="secretStatus"><input id="secretStatus" name="secretStatus" type="checkbox" placeholder="비밀글" data-sb-validations="required" />비밀글</label>
+              <div class="invalid-feedback" data-sb-feedback="phone:required">A phone number is required.</div>
+            </div>
+
+            <!-- secret Pwd input-->
+            <div class="form-floating mb-3">
+              <input class="form-control" id="secretPwd" name="secretPwd" type="text" placeholder="비밀번호" data-sb-validations="required" />
+              <label for="secretPwd">비밀번호</label>
+              <div class="invalid-feedback" data-sb-feedback="phone:required">A phone number is required.</div>
+            </div>
+            <!-- Message input-->
+            <div class="form-floating mb-3">
+              <textarea class="form-control" id="message" type="text" name="qnaContent" placeholder="Enter your message here..." style="height: 10rem" data-sb-validations="required"></textarea>
+              <!--<label for="message">Message</label>-->
+              <div class="invalid-feedback" data-sb-feedback="message:required">A message is required.</div>
+            </div>
+            <!-- Submit success message-->
+            <!---->
+            <!-- This is what your users will see when the form-->
+            <!-- has successfully submitted-->
+            <div class="d-none" id="submitSuccessMessage">
+              <div class="text-center mb-3">
+                <div class="fw-bolder">Form submission successful!</div>
+                To activate this form, sign up at
+                <br />
+                <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
+              </div>
+            </div>
+            <!-- Submit error message-->
+            <!---->
+            <!-- This is what your users will see when there is-->
+            <!-- an error submitting the form-->
+            <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
+            <!-- Submit Button-->
+            <button class="btn btn-primary btn-xl disabled" id="submitButton" type="submit">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/assets/summernote/summernote-lite.js"></script>
+  <script src="/assets/summernote/lang/summernote-ko-KR.js"></script>
+  <link rel="stylesheet" href="/assets/summernote/summernote-lite.css">
+
+  <script layout:fragment="script" th:inline="javascript">
+    console.log("확인");
+    $("[name=qnaContent]").summernote({
+      height : 400,
+      lang : "ko-KR",
+      callbacks : {
+        onImageUpload : function (files){
+          uploadImage(files[0], this);
+        }
+      }
+    });
+
+    function uploadImage(files, editor){
+      const form = new FormData();
+      form.append("files", files);
+      const url = "/editorFileUpload";
+      $.ajax({
+        url : url,
+        type : "post",
+        data : form,
+        processData : false,
+        contentType : false,
+        success : function (data){
+          $(editor).summernote("insertImage", data);
+        }
+      })
+
+    }
+  </script>
+</th:block>
