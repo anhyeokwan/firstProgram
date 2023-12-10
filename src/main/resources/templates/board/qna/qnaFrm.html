@@ -17,7 +17,7 @@
       <!-- Contact Section Form-->
       <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-7">
-          <form id="contactForm">
+          <form id="contactForm" enctype="multipart/form-data">
             <!-- qna제목 input-->
             <div class="form-floating mb-3">
               <input class="form-control" id="qnaTitle" name="qnaTitle" type="text" placeholder="제목" data-sb-validations="required" />
@@ -98,10 +98,12 @@
         url : url,
         type : "post",
         data : form,
+        dataType : "text",
         processData : false,
         contentType : false,
         success : function (data){
           $(editor).summernote("insertImage", data);
+          console.log(data);
         }
       })
 
