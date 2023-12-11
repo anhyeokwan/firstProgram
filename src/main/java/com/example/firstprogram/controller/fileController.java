@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 @Controller
 @Log4j2
 @RequiredArgsConstructor
@@ -30,6 +32,25 @@ public class fileController {
 
         String filepath = (String) fileJson.get("filepath");
         return filepath;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/fileUpload", produces = "application/json;charset=utf-8")
+    public JSONObject fileUpload(HttpServletRequest request, @RequestParam Map<String, Object> map
+    , @RequestParam("fileArr") MultipartFile[] multipartFiles) {
+
+        String type = (String) map.get("type");
+        //MultipartFile[] multipartFiles = (MultipartFile[]) map.get("fileArr");
+        String savePath = "/qna/";
+        log.info("type : " + type);
+        JSONObject fileJson = util.fileUpload(request, multipartFiles, savePath);
+        String filepath = (String) fileJson.get("filepath");
+        log.info("filepath : " + filepath);
+        for (MultipartFile files : multipartFiles) {
+            log.info("files : " + files.getOriginalFilename());
+        }
+
+        return null;
     }
 
 }

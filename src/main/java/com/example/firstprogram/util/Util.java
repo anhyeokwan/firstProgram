@@ -34,9 +34,11 @@ public class Util {
             for (MultipartFile file : multipartFile) {
                 String filename = file.getOriginalFilename();
                 log.info("filename : " + filename);
+                String realFile = fileReName(savePath, filename);
+                log.info("realFile : " + realFile);
 
                 try {
-                    FileOutputStream fos = new FileOutputStream(savePath + filename);
+                    FileOutputStream fos = new FileOutputStream(realFile);
                     BufferedOutputStream bos = new BufferedOutputStream(fos);
                     byte[] bytes = file.getBytes();
 
@@ -57,7 +59,7 @@ public class Util {
         return jsonObject;
     }
 
-    /*public String fileReName(String savePath, String filename) {
+    public String fileReName(String savePath, String filename) {
 
         String filepath = "";
 
@@ -68,15 +70,19 @@ public class Util {
         log.info("extention : " + extention);
         int cnt = 0;
         while (true) {
-            cnt++;
-            filepath = savePath + onlyFilename + "(" + cnt + ")" + extention;
-
-            File fileChk = new File(savePath + filename);
-            if (fileChk.exists()) {
-                filepath = savePath + onlyFilename + "(" + 1 + ")" + extention;
+            if(cnt == 0){
+                filepath = savePath + onlyFilename + extention;
+            }else{
+                filepath = savePath + onlyFilename + "(" + cnt + ")" + extention;
             }
+
+            File fileChk = new File(filepath);
+            if (!fileChk.exists()) {
+                break;
+            }
+            cnt++;
         }
-        return "";
-    }*/
+        return filepath;
+    }
 
 }
