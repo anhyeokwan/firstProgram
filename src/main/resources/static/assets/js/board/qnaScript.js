@@ -16,10 +16,10 @@ function makeFileListHtml(data){
         var fileUrl;
         if(data[i].image){
             fileUrl = "/getImgUrl?filepath=" + data[i].filename + "&type=qna";
-            fileTag = "<span><img src='" + fileUrl + "'><button onclick='removeFile()'>X</button></span>";
+            fileTag = "<span><img src='" + fileUrl + "'><button onclick=\"removeFile(this, '" + data[i].filepath + "')\">X</button></span>";
         }else{
             fileUrl = data[i].filepath;
-            fileTag = "<span>" + fileUrl + "<button onclick='removeFile()'>X</button></span>";
+            fileTag = "<span>" + fileUrl + "<button onclick='removeFile(" + fileUrl + ")'>X</button></span>";
         }
 
         target.append(
@@ -28,6 +28,28 @@ function makeFileListHtml(data){
     }
 }
 
-function removeFile(){
+function removeFile(obj, filepath){
     console.log("확인");
+    console.log(filepath);
+
+    var url = "/removeFile";
+
+    $.ajax({
+        url : url,
+        type : "post",
+        data : {
+            filepath : filepath
+        },
+        dataType: "json",
+        success: function (data) {
+            var code = data.code;
+            var message = data.message;
+
+            if (code != "200") {
+                alert(message);
+            }else{
+                $(obj).parent().remove();
+            }
+        },
+    })
 }

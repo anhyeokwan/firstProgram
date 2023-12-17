@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -70,12 +71,15 @@ public class fileController {
         String extention = filepath.substring(filepath.lastIndexOf(".") + 1);
         response.setContentType("image/" + extention);
 
-        log.info(util.resourcePaht);
-
         String fileSource = util.resourcePaht + util.defaultPath + "/" + fileType + "/" + filepath;
-        log.info(">>>" + fileSource);
         URL url = null;
         try {
+            /*
+            * URL 클래스 사용시 추가
+            * file:
+            http:
+            https:
+            * */
             url = new URL("file:///" + fileSource);
             URLConnection connection = url.openConnection();
 
@@ -89,5 +93,28 @@ public class fileController {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/removeFile", produces = "application/json;charset=utf-8")
+    public JSONObject removeFile(HttpServletRequest request, @RequestParam("filepath") String filepath) {
+        JSONObject jsonObject = new JSONObject();
+        String code = "200";
+        String message = "";
+        log.info(">>>" + filepath);
+
+        File fileChk = new File(filepath);
+
+        if (fileChk.exists()) {
+            fileChk.delete();
+        }else{
+            code = "500";
+            message = "파일이 정상적으로 처리되지 않았습니다. 다시 시도해주세요.";
+        }
+
+        jsonObject.put("code", code);
+        jsonObject.put("message", message);
+
+        return jsonObject;
     }
 }
