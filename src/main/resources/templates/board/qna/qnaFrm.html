@@ -94,7 +94,7 @@
   <script src="/assets/summernote/summernote-lite.js"></script>
   <script src="/assets/summernote/lang/summernote-ko-KR.js"></script>
   <link rel="stylesheet" href="/assets/summernote/summernote-lite.css">
-
+  <script th:src="@{/assets/js/board/qnaScript.js}"></script>
   <script layout:fragment="script" th:inline="javascript">
     console.log("확인");
 
@@ -128,7 +128,14 @@
         contentType : false,
         success: function (data) {
           console.log(data);
-        },
+          const fileArr = data.files;
+          if(data.length == 0){
+            alert("업로드된 파일이 없습니다.");
+            return;
+          }else{
+            makeFileListHtml(fileArr);
+          }
+        }
       })
     }
     /*$("[name=qnaContent]").summernote({
@@ -157,8 +164,8 @@
           $(editor).summernote("insertImage", data);
           console.log(data);
         }
-      })*/
+      });
 
-    //}
+    }*/
   </script>
 </th:block>

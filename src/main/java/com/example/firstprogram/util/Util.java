@@ -1,7 +1,9 @@
 package com.example.firstprogram.util;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnailator;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,43 +12,73 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.UUID;
 
 @Component
 @Log4j2
 @PropertySource("classpath:application.properties")
 public class Util {
 
+    @Value("${resource.path}")
+    public String resourcePaht;
     @Value("${upload.path}")
-    private String defaultPath;
+    public String defaultPath;
+
+    String imgExtention = "jpeg, jpg, png, svg";
 
     /*
     * file upload
     * */
-    public JSONObject fileUpload(HttpServletRequest request, MultipartFile[] multipartFile, String filePath){
-
+    public List<LinkedHashMap<String, Object>> fileUpload(HttpServletResponse response, MultipartFile[] multipartFile, String filePath){
+        List<LinkedHashMap<String, Object>> list = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
         log.info("defaultPath : " + defaultPath);
         if(multipartFile.length > 0){
-            String savePath = defaultPath + filePath;
-            log.info("savepath : " + savePath);
-            for (MultipartFile file : multipartFile) {
-                String filename = file.getOriginalFilename();
-                log.info("filename : " + filename);
-                String realFile = fileReName(savePath, filename);
-                log.info("realFile : " + realFile);
+            resourcePaht = resourcePaht.substring(resourcePaht.lastIndexOf("D"));
+            String savePath = resourcePaht + defaultPath + filePath;
 
+            for (MultipartFile file : multipartFile) {
+                LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+                String filename = file.getOriginalFilename();
+                String realFile = this.fileReName(savePath, filename);
+                Path realPath = Paths.get(realFile);
+                log.info("realPath : " + realPath);
                 try {
-                    FileOutputStream fos = new FileOutputStream(realFile);
+                    /*FileOutputStream fos = new FileOutputStream(realFile);
                     BufferedOutputStream bos = new BufferedOutputStream(fos);
                     byte[] bytes = file.getBytes();
 
                     bos.write(bytes);
-                    bos.close();
+                    bos.close();*/
 
-                    jsonObject.put("filename", filename);
-                    jsonObject.put("filepath", savePath + filename);
+                    /*URL fileUrl = new URL(realFile);
+                    URLConnection connection = fileUrl.openConnection();*/
+
+                    file.transferTo(realPath);
+
+                    boolean imageBool = false;
+
+                    if (Files.probeContentType(realPath).startsWith("image")) {
+                        imageBool = true;
+
+                        File thumbNail = new File(realFile);
+                        Thumbnailator.createThumbnail(realPath.toFile(), thumbNail, 200, 200);
+                    }
+
+
+                    map.put("filename", filename);
+                    map.put("filepath", savePath + filename);
+                    map.put("image", imageBool);
+
+                    list.add(map);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
@@ -56,9 +88,17 @@ public class Util {
             }
         }
 
-        return jsonObject;
+        log.info(list);
+        return list;
     }
 
+    public void imageURL(HttpServletResponse response, String filename){
+        String extention = filename.substring(filename.lastIndexOf("."));
+
+        if (imgExtention.contains(extention)) response.setContentType("image/" + extention);
+
+
+    }
     public String fileReName(String savePath, String filename) {
 
         String filepath = "";

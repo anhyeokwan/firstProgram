@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Log4j2
 public class qnaController {
 
-    @GetMapping("qnaList")
+    @GetMapping("/qnaList")
     public String qnaList(){
         return "board/qna/qnaList";
     }
