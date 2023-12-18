@@ -101,7 +101,6 @@ public class fileController {
         JSONObject jsonObject = new JSONObject();
         String code = "200";
         String message = "";
-        log.info(">>>" + filepath);
 
         File fileChk = new File(filepath);
 

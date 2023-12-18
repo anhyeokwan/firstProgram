@@ -1,5 +1,6 @@
 package com.example.firstprogram.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
@@ -17,10 +18,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 @Log4j2
@@ -123,6 +121,14 @@ public class Util {
             cnt++;
         }
         return filepath;
+    }
+
+    public Map<String, Object> stringToMap(String mapString) {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> map = mapper.convertValue(mapString, Map.class);
+        log.info(">>> " + mapString);
+
+        return map;
     }
 
 }

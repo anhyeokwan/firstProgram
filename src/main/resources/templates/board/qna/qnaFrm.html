@@ -14,6 +14,11 @@
         <div class="divider-custom-line"></div>
       </div>
 
+      <form id="fileFrm">
+        <input type="hidden" name="filename">
+        <input type="hidden" name="filepath">
+      </form>
+
       <!-- Contact Section Form-->
       <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-7">
@@ -75,8 +80,10 @@
             <!-- This is what your users will see when there is-->
             <!-- an error submitting the form-->
             <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
-            <!-- Submit Button-->
-            <button class="btn btn-primary btn-xl disabled" id="submitButton" type="submit">Send</button>
+            <div class="input-group mb-3">
+              <!-- Submit Button-->
+              <button class="btn btn-primary btn-xl" id="submitButton" type="button" onclick="registQna();">Send</button>
+            </div>
           </form>
 
           <!-- 첨부파일 섬테일을 보여줄 부분 -->

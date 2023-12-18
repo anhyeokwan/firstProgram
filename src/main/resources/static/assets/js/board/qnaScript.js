@@ -6,6 +6,43 @@ function loadQnaList(){
 
 }
 
+function registQna() {
+    const filenameArr = [];
+    const filepathArr = [];
+    const url = "/qna/insertQna";
+    var dataString = $("#contactForm").serialize();
+
+    for (let i = 0; i < $(".fileSpan").length; i++) {
+        var filename = $(".fileSpan").eq(i).data("filename");
+        var filepath = $(".fileSpan").eq(i).data("filepath");
+
+        filenameArr.push(filename);
+        filepathArr.push(filepath);
+    }
+
+    console.log(filenameArr);
+    console.log(filepathArr);
+
+    const fileObj = {
+        filenameArr : filenameArr,
+        filepathArr : filepathArr
+    };
+
+    dataString += "&fileObj=" + JSON.stringify(fileObj);
+
+    console.log("dataString >>> " + dataString);
+
+    $.ajax({
+        url : url,
+        type : "post",
+        data: dataString,
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+        },
+    })
+}
+
 function makeFileListHtml(data){
     $(".uploadResult").empty();
     const target = $(".uploadResult");
@@ -16,10 +53,11 @@ function makeFileListHtml(data){
         var fileUrl;
         if(data[i].image){
             fileUrl = "/getImgUrl?filepath=" + data[i].filename + "&type=qna";
-            fileTag = "<span><img src='" + fileUrl + "'><button onclick=\"removeFile(this, '" + data[i].filepath + "')\">X</button></span>";
+            fileTag = "<span class='fileSpan' data-filename='" + data[i].filename + "' data-filepath='" + data[i].filepath + "'><img src='" + fileUrl + "'><button onclick=\"removeFile(this, '" + data[i].filepath + "')\">X</button></span>";
+
         }else{
             fileUrl = data[i].filepath;
-            fileTag = "<span>" + fileUrl + "<button onclick='removeFile(" + fileUrl + ")'>X</button></span>";
+            fileTag = "<span class='fileSpan' data-filename='" + data[i].filename + "' data-filepath='" + data[i].filepath + "'>" + fileUrl + "<button onclick='removeFile(" + fileUrl + ")'>X</button></span>";
         }
 
         target.append(
@@ -29,8 +67,6 @@ function makeFileListHtml(data){
 }
 
 function removeFile(obj, filepath){
-    console.log("확인");
-    console.log(filepath);
 
     var url = "/removeFile";
 
