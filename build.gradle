@@ -54,7 +54,7 @@ tasks.named('test') {
 }
 
 // === Querydsl 빌드 옵션 (선택사항) ===
-def querydslDir = "$projectDir/generated/querydsl"
+def querydslDir = "$projectDir/build/generated"
 
 querydsl {
 	jpa = true
@@ -62,7 +62,11 @@ querydsl {
 }
 
 sourceSets {
-	main.java.srcDir querydslDir
+	main {
+		java {
+			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+		}
+	}
 }
 
 configurations {

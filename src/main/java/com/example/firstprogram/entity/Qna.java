@@ -3,6 +3,7 @@ package com.example.firstprogram.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "tbl_qna")
 public class Qna {
 
     @Id
@@ -40,5 +42,5 @@ public class Qna {
     private String status;
 
     @Column(name = "reg_date")
-    private LocalDate regDate;
+    private String regDate;
 }
