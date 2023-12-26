@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +45,9 @@ public class QnaServiceImpl implements QnaService{
         String writer = (String) qnaMap.get("qnaWriter");
         String content = (String) qnaMap.get("qnaContent");
         String secretStatus = (String) qnaMap.get("secretStatus");
+        if (secretStatus == null) {
+            secretStatus = "N";
+        }
         String secretPwd = (String) qnaMap.get("secretPwd");
 
         Qna insertQna = Qna.builder()
@@ -64,9 +64,19 @@ public class QnaServiceImpl implements QnaService{
         Qna result = qnaRepository.save(insertQna);
 
         if (result != null) {
-            JSONObject fileObj = (JSONObject) qnaMap.get("jsonObject");
+            log.info("--- 확인---");
+            JSONObject fileObj = (JSONObject) qnaMap.get("fileObj");
             log.info("fileObj >>> " + fileObj);
+            List<String> filenameList = (ArrayList<String>) fileObj.get("filenameArr");
+            log.info("filenameList >>> " + filenameList);
+            List<String> filepathList = (ArrayList<String>) fileObj.get("filepathArr");
+            log.info("filepathList >>> " + filepathList);
 
+            if (filenameList.size() > 0 && filepathList.size() > 0) {
+                if (filenameList.size() == filepathList.size()) {
+
+                }
+            }
         }
 
         return null;

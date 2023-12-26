@@ -1,15 +1,14 @@
 package com.example.firstprogram.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -43,4 +42,32 @@ public class Qna {
 
     @Column(name = "reg_date")
     private String regDate;
+
+    @OneToMany(fetch = FetchType.LAZY
+            , cascade = CascadeType.ALL /* persist(영속성)와 remove(삭제)의 기능을 모두 가지고 있음 */
+            , orphanRemoval = true /* 부모가 삭제되면 자식도 삭제 */)
+    @Builder.Default
+    private List<File> files = new ArrayList<>();
+
+    public void addFile() {
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

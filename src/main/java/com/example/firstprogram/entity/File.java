@@ -24,4 +24,9 @@ public class File {
     @Column(name = "filepath")
     private String filepath;
 
+    @Column(name = "type")
+    private String type;
+
+    @ManyToOne
+    private Qna qna;
 }
