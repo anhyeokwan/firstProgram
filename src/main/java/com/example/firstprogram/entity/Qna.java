@@ -49,8 +49,18 @@ public class Qna {
     @Builder.Default
     private List<File> files = new ArrayList<>();
 
-    public void addFile() {
+    /*
+    * 파일 리스트 생성
+    * */
+    public void addFile(String filename, String filepath, int gIdx) {
+        File file = File.builder()
+                .gIdx(gIdx)
+                .filename(filename)
+                .filepath(filepath)
+                .type("q")
+                .build();
 
+        files.add(file);
     }
 }
 

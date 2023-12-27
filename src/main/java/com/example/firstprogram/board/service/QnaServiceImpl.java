@@ -74,7 +74,11 @@ public class QnaServiceImpl implements QnaService{
 
             if (filenameList.size() > 0 && filepathList.size() > 0) {
                 if (filenameList.size() == filepathList.size()) {
-
+                    log.info("fildCnt >>> " + filenameList.size());
+                    for (int i = 0; i < filenameList.size(); i++) {
+                        result.addFile(filenameList.get(i), filepathList.get(i), result.getIdx());
+                    }
+                    log.info(">>> " + result.getFiles());
                 }
             }
         }

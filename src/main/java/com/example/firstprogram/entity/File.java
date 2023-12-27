@@ -18,6 +18,10 @@ public class File {
     @Column(name = "f_idx")
     private int fIdx;
 
+    @Column(name = "g_idx")
+    @JoinColumn
+    private int gIdx;
+
     @Column(name = "filename")
     private String filename;
 
