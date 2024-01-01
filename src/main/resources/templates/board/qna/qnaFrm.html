@@ -14,6 +14,10 @@
         <div class="divider-custom-line"></div>
       </div>
 
+      <form id="iForm">
+        <input type="hidden" name="qnaIdx">
+      </form>
+
       <form id="fileFrm">
         <input type="hidden" name="filename">
         <input type="hidden" name="filepath">
@@ -103,10 +107,8 @@
   <link rel="stylesheet" href="/assets/summernote/summernote-lite.css">
   <script th:src="@{/assets/js/board/qnaScript.js}"></script>
   <script layout:fragment="script" th:inline="javascript">
-    console.log("확인");
 
     function fileUpload() {
-      console.log("확인");
       const formData = new FormData();
       const fileArr = [];
       const fileNameArr = [];

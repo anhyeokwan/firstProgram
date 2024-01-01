@@ -1,6 +1,7 @@
 package com.example.firstprogram.board.controller;
 
 import com.example.firstprogram.board.service.QnaService;
+import com.example.firstprogram.entity.Qna;
 import com.example.firstprogram.util.Util;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -38,6 +40,11 @@ public class qnaController {
     public JSONObject insertQna(HttpServletRequest request
             , @RequestParam Map<String, Object> map) {
 
+        String code = "200";
+        String message = "";
+
+        JSONObject resultObj = new JSONObject();
+
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = null;
 
@@ -48,16 +55,9 @@ public class qnaController {
         String secretPwd = (String) map.get("secretPwd");
         String fileObj = (String) map.get("fileObj");
 
-        log.info("title >>> " + title);
-        log.info("writer >>> " + writer);
-        log.info("content >>> " + content);
-        log.info("content >>> " + secretStatus);
-        log.info("content >>> " + secretPwd);
-
         if (fileObj != null) {
             try {
                 jsonObject = (JSONObject) jsonParser.parse(fileObj);
-                log.info(">>> " + jsonObject);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
@@ -75,7 +75,42 @@ public class qnaController {
 
         //HashMap<String, Object> fileMap =
 
-        System.out.println("fileObj >>> " + fileObj);
+        code = (String) qnaInsert.get("code");
+        message = (String) qnaInsert.get("message");
+
+        resultObj.put("code", code);
+        resultObj.put("message", message);
+        if(code.equals("200")) resultObj.put("qnaIdx", qnaInsert.get("qnaIdx"));
+
+        return resultObj;
+    }
+
+    @GetMapping("/loadOneQna")
+    public String loadOneQna(HttpServletRequest request, Model model, @RequestParam("qnaIdx") String qnaIdx) {
+
+        String code = "200";
+        String message = "";
+        int qIdx = 0;
+
+        log.info(">>> " + qnaIdx);
+
+        if (qnaIdx == null) {
+            code = "503";
+            message = "조회 중 오류가 발생하였습니다.";
+        }else{
+            try {
+                qIdx = Integer.parseInt(qnaIdx);
+            } catch (NumberFormatException e) {
+                code = "503";
+                message = "조회 중 오류가 발생하였습니다.";
+            }
+        }
+
+        if (code.equals("200")) {
+            Map<String, Object> resultQna = qnaService.loadOneQna(qIdx);
+        }
+
+        //if(qnaIdx )
 
         return null;
     }

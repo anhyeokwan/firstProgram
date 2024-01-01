@@ -20,17 +20,12 @@ function registQna() {
         filepathArr.push(filepath);
     }
 
-    console.log(filenameArr);
-    console.log(filepathArr);
-
     const fileObj = {
         filenameArr : filenameArr,
         filepathArr : filepathArr
     };
 
     dataString += "&fileObj=" + JSON.stringify(fileObj);
-
-    console.log("dataString >>> " + dataString);
 
     $.ajax({
         url : url,
@@ -39,8 +34,38 @@ function registQna() {
         dataType: "json",
         success: function (data) {
             console.log(data);
+            const code = data.code;
+            let message = data.message;
+
+            if (code == "200") {
+                const qnaIdx = data.qnaIdx;
+                loadOneQna(qnaIdx);
+            }else{
+                alert(message);
+            }
         },
     })
+}
+
+function loadOneQna(qnaIdx) {
+    const url = "/qna/loadOneQna";
+    $("[name=qnaIdx]").val(qnaIdx);
+    $("#iForm").attr("method", "get");
+    $("#iForm").attr("action", url);
+    $("#iForm").submit();
+
+    /*$.ajax({
+        url : url,
+        type : "get",
+        data : {
+            qnaIdx : qnaIdx
+        },
+        dataType : "json"
+        ,
+        success: function (data) {
+
+        },
+    })*/
 }
 
 function makeFileListHtml(data){

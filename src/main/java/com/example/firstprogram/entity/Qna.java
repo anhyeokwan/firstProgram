@@ -43,10 +43,12 @@ public class Qna {
     @Column(name = "reg_date")
     private String regDate;
 
-    @OneToMany(fetch = FetchType.LAZY
+    @OneToMany(
+            fetch = FetchType.LAZY
             , cascade = CascadeType.ALL /* persist(영속성)와 remove(삭제)의 기능을 모두 가지고 있음 */
             , orphanRemoval = true /* 부모가 삭제되면 자식도 삭제 */)
     @Builder.Default
+    @JoinColumn(name = "q_idx")
     private List<File> files = new ArrayList<>();
 
     /*
@@ -57,7 +59,6 @@ public class Qna {
                 .gIdx(gIdx)
                 .filename(filename)
                 .filepath(filepath)
-                .type("q")
                 .build();
 
         files.add(file);

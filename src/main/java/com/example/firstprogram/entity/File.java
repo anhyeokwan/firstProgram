@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "tbl_file")
+@Table(name = "tbl_file_qna")
 public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,6 @@ public class File {
     private int fIdx;
 
     @Column(name = "g_idx")
-    @JoinColumn
     private int gIdx;
 
     @Column(name = "filename")
@@ -28,9 +27,4 @@ public class File {
     @Column(name = "filepath")
     private String filepath;
 
-    @Column(name = "type")
-    private String type;
-
-    @ManyToOne
-    private Qna qna;
 }
