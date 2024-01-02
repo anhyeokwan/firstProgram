@@ -87,10 +87,16 @@ public class QnaServiceImpl implements QnaService{
     @Override
     public Map<String, Object> loadOneQna(int qIdx) {
 
+        Map<String, Object> map = new HashMap<>();
+
         String code = "200";
         String message = "";
 
         Optional<Qna> resultQna = qnaRepository.findById(qIdx);
+
+        Qna qna = resultQna.orElseThrow();
+
+        log.info("qna >>> " + qna);
 
         return null;
     }
